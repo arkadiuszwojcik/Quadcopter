@@ -76,12 +76,26 @@ public class QBluetoothService extends AbstractService
 			String address = msg.getData().getString(KEY_MSG_CONNECT_TO_DEVICE_REQUEST_ADDRESS);
 			this.connect(address);
 		}
+
+        if (msg.what == MSG_SEND_DATA_CHUNK_REQUEST)
+        {
+            String data = msg.getData().getString(KEY_MSG_SEND_DATA_CHUNK_REQUEST_DATA);
+            this.sendDataChunk(data);
+        }
 	}
 	
 	public BluetoothDevice getRemoteDevice(String address)
 	{
 		return this.bluetoothAdapter.getRemoteDevice(address);
 	}
+
+    public void sendDataChunk(String data)
+    {
+        if (this.socket != null)
+        {
+            this.socket.writeData(data);
+        }
+    }
 	
 	class ReceiverCallback implements IQBluetoothBroadcastReceiverCallback 
 	{
@@ -180,7 +194,6 @@ public class QBluetoothService extends AbstractService
 			
 			if (this.socket.connect() == true)
 			{
-				Log.i("DUPOZA", "CONNECTED");
 				this.sendConnectedResponse(address);
 			}
 		} 
@@ -208,7 +221,6 @@ public class QBluetoothService extends AbstractService
 		data.putString(KEY_MSG_DEVICE_CONNECTED_RESPONSE_ADDRESS, address);
 		msg.setData(data);
 		QBluetoothService.this.send(msg);
-		Log.i("DUPOZA", "MESSAGED");
 	}
 	
 	private void sendDataChunkResponse(String dataChunk)
@@ -248,6 +260,7 @@ public class QBluetoothService extends AbstractService
 	public static final int MSG_CONNECT_TO_DEVICE_REQUEST = 10;
 	public static final int MSG_DEVICE_CONNECTED_RESPONSE = 11;
 	public static final int MSG_DATA_CHUNK_RESPONSE = 12;
+    public static final int MSG_SEND_DATA_CHUNK_REQUEST = 13;
 	
 	public static final Message MsgIsEnabledRequest = Message.obtain(null, MSG_IS_ENABLED_REQUEST);
 	public static final Message MsgStartDiscoverRequest = Message.obtain(null, MSG_START_DISCOVER_REQUEST);
@@ -263,6 +276,8 @@ public class QBluetoothService extends AbstractService
 	public static final String KEY_MSG_DEVICE_CONNECTED_RESPONSE_ADDRESS = "address";
 	
 	public static final String KEY_MSG_DATA_CHUNK_RESPONSE_DATA = "data";
+
+    public static final String KEY_MSG_SEND_DATA_CHUNK_REQUEST_DATA = "data";
 	
 	private final String TAG = "QMC:QBluetoothService";
 	

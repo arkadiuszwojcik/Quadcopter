@@ -10,16 +10,16 @@ import com.google.inject.Provider;
 
 public class TerminalViewModelFactory 
 {
-	private final Injector mInjector;
-	
 	@Inject
 	public TerminalViewModelFactory(Provider<Activity> activityProvider, QBluetoothServiceProvider bluetoothServiceProvider)
 	{
-		this.mInjector = Guice.createInjector(new GuiceContext(activityProvider, bluetoothServiceProvider));
+		this.injector = Guice.createInjector(new GuiceContext(activityProvider, bluetoothServiceProvider));
 	}
 	
 	public TerminalViewModel Create()
 	{
-		return mInjector.getInstance(TerminalViewModel.class);
+		return injector.getInstance(TerminalViewModel.class);
 	}
+
+    private final Injector injector;
 }

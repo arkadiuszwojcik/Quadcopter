@@ -72,5 +72,5 @@ class QReceiveWorker implements Runnable
 	
 	private final IQBluetoothSocketCallback callback;
 	private final QBluetoothSocket socket;
-	private static final byte Delimiter = '|';
+	private static final byte Delimiter = '\n';
 }

@@ -1,6 +1,6 @@
 package com.awojcik.qmc.modules.bluetooth;
 
-import com.awojcik.qmc.modules.common.IIntraMessageListener;
+import com.awojcik.qmc.modules.common.IIntraModuleMessageListener;
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
 import com.awojcik.qmc.providers.QBluetoothServiceProvider;
 import com.awojcik.qmc.services.AbstractService;
@@ -142,7 +142,7 @@ public class BluetoothViewModel
 		}
 	}
 	
-	class IntraMessageListener implements IIntraMessageListener
+	class IntraMessageListener implements IIntraModuleMessageListener
 	{
 		public void onMessage(Object message) 
 		{

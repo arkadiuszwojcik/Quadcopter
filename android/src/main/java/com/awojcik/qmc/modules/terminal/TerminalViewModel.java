@@ -1,42 +1,42 @@
 package com.awojcik.qmc.modules.terminal;
 
 import android.app.Activity;
-import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 
 import com.awojcik.qmc.R;
-import com.awojcik.qmc.modules.common.IIntraMessageListener;
+import com.awojcik.qmc.modules.common.IIntraModuleMessageListener;
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
+import com.awojcik.qmc.modules.terminal.commands.SendCommand;
+import com.awojcik.qmc.modules.terminal.messages.SendMessage;
 import com.awojcik.qmc.providers.QBluetoothServiceProvider;
 import com.awojcik.qmc.services.ServiceManager;
 import com.awojcik.qmc.services.bluetooth.QBluetoothService;
 import com.awojcik.qmc.utilities.ActivityExtensions;
 import com.google.inject.Inject;
 
+import gueei.binding.Command;
 import gueei.binding.observables.CharSequenceObservable;
+import gueei.binding.observables.IntegerObservable;
 import gueei.binding.observables.StringObservable;
 
 public class TerminalViewModel 
 {
-	public SendCommand SendCommand;
+	public com.awojcik.qmc.modules.terminal.commands.SendCommand SendCommand;
 	
-	public StringObservable InputText = new StringObservable("DDD");
-	
-	//public StringObservable Text = new StringObservable();
-	public CharSequenceObservable Text = new CharSequenceObservable("III");
+	public StringObservable InputText = new StringObservable("");
+
+	public CharSequenceObservable Text = new CharSequenceObservable("");
 	
 	private StringBuffer buffer = new StringBuffer();
 	
 	private TerminalSpannableStringBuffer bufferTest = new TerminalSpannableStringBuffer(39);
-	
-	/*
-	 * Private
-	 */
+
 	private ServiceManager bluetoothService;
 	
 	private IntraModuleMessenger intraModuleMessenger;
@@ -63,6 +63,32 @@ public class TerminalViewModel
 		this.bufferTest.appendLine(line, 0);
 		this.Text.set(bufferTest.getBuffer());
 	}
+
+    private  void sendCommand(String command)
+    {
+        if (!command.endsWith("\n")) command = command + "\n";
+
+        Message message = this.getSendCommandMessage(command);
+        try
+        {
+            this.bluetoothService.send(message);
+        }
+        catch (RemoteException e)
+        {
+        }
+    }
+
+    private Message getSendCommandMessage(String strData)
+    {
+        Message msg = new Message();
+        msg.what = QBluetoothService.MSG_SEND_DATA_CHUNK_REQUEST;
+
+        Bundle data = new Bundle();
+        data.putString(QBluetoothService.KEY_MSG_SEND_DATA_CHUNK_REQUEST_DATA, strData);
+        msg.setData(data);
+
+        return msg;
+    }
 	
 	private void clearInputControl()
 	{
@@ -74,13 +100,14 @@ public class TerminalViewModel
 		((ScrollView)this.activity.findViewById(R.id.terminal_scroll_view)).fullScroll(View.FOCUS_DOWN);
 	}
 	
-	class IntraMessageListener implements IIntraMessageListener
+	class IntraMessageListener implements IIntraModuleMessageListener
 	{
 		public void onMessage(Object message)
 		{
 			if (message instanceof SendMessage)
 			{	
 				appendLine(InputText.get());
+                sendCommand(InputText.get());
 				clearInputControl();
 				scrollDown();
 				ActivityExtensions.closeInputControl(activity);

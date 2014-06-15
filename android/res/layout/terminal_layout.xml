@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:binding="http://www.gueei.com/android-binding/"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >
+              xmlns:binding="http://www.gueei.com/android-binding/"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
     <LinearLayout
-        android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_gravity="center_vertical"
-    	android:orientation="horizontal">
-    	<Button
-            android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:text="Wyślij"
-    		binding:onClick="SendCommand"
-            />
-        <EditText
             android:layout_width="match_parent"
-    		android:layout_height="wrap_content"
-    		android:inputType="text"
-    		binding:text="InputText"
-    	/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                binding:onClick="SendCommand"
+                />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                binding:text="InputText"
+                />
     </LinearLayout>
-    
+
     <ScrollView
-        android:id="@+id/terminal_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/terminal_background">
+            android:id="@+id/terminal_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/terminal_background">
         <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:minLines="15"
-          android:maxLines="40"
-          binding:text="Text"
-        />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minLines="15"
+                android:maxLines="40"
+                binding:text="Text"
+                />
     </ScrollView>
 </LinearLayout>
