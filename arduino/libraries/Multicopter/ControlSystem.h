@@ -1,11 +1,16 @@
 #ifndef ControlSystem_h
 #define ControlSystem_h
 
+#include "../IMU/IMU.h"
+#include "AxisCascadeControl.h"
+
 class ControlSystem
 {
  public:
- ControlSystem(PersistentData& data, FreeImu& imu, IMulticopterSetup& multicopter)
-   : data(data), imu(imu), multicopter(multicopter)
+ ControlSystem(MulticopterData& data, FreeIMU& imu, IMulticopterSetup& multicopter)
+   : data(data), imu(imu), multicopter(multicopter),
+   rollController(&rollAngle, &gyroRollRate, &desiredRollAngle, &rollPid),
+   pitchController(&pitchAngle, &gyroPitchRate, &desiredPitchAngle, &pitchPid)
     {}
 
   void update(float dt);
@@ -13,22 +18,22 @@ class ControlSystem
  private:
   AxisCascadeControl rollController;
   AxisCascadeControl pitchController;
-  AxisCascadeControl yawController;
 
-  FreeImu& imu;
-  PersistentData& data;
+  FreeIMU& imu;
+  MulticopterData& data;
   IMulticopterSetup& multicopter;
 
   float rollAngle;
   float pitchAngle;
-  float yawAngle;
 
   float gyroRollRate;
   float gyroPitchRate;
-  float gyroYawRate;
+  
+  float desiredRollAngle;
+  float desiredPitchAngle;
 
-  int* rollPid;
-  int* pitchPid;
+  float rollPid;
+  float pitchPid;
 };
 
 #endif

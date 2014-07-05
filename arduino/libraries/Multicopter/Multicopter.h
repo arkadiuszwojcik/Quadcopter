@@ -1,6 +1,9 @@
 #ifndef Multicopter_h
 #define Multicopter_h
 
+#include "IMulticopterSetup.h"
+#include "ControlSystem.h"
+
 class Multicopter
 {
  public:

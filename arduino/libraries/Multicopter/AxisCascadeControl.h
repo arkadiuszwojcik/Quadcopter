@@ -1,6 +1,8 @@
 #ifndef AxisCascadeControl_h
 #define AxisCascadeControl_h
 
+#include "../PID/PID.h"
+
 class AxisCascadeControl
 {
  public:
@@ -11,7 +13,7 @@ class AxisCascadeControl
 
   void update(float dt)
   {
-    this->stabiliserPID.update(dt);
+    this->stabilisePID.update(dt);
     this->ratePID.update(dt);
   }
 

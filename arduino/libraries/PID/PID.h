@@ -1,28 +1,26 @@
 #ifndef PID_h
 #define PID_h
 
-typedef scalar_t float;
-
 class PID
 {
 public:
-	PID(scalar_t* input, scalar_t* output, scalar_t* setpoint,
-		scalar_t kp, scalar_t ki, scalar_t kd);
+	PID(float* input, float* output, float* setpoint,
+		float kp, float ki, float kd);
 		
-	void setTunings(scalar_t kp, scalar_t ki, scalar_t kd);
-	void update(scalar_t dt);
-	void setOutputLimits(scalar_t min, scalar_t max);
+	void setTunings(float kp, float ki, float kd);
+	void update(float dt);
+	void setOutputLimits(float min, float max);
 	
 private:
-	scalar_t kp, ki, kd;
-	scalar_t outMin, outMax;
+	float kp, ki, kd;
+	float outMin, outMax;
 	
-	scalar_t* input;
-	scalar_t* output;
-	scalar_t* setpoint;
+	float* input;
+	float* output;
+	float* setpoint;
 	
-	scalar_t iAccumulated;
-	scalar_t lastInput;
+	float iAccumulated;
+	float lastInput;
 };
 
 #endif

@@ -24,22 +24,22 @@ class MulticopterData
   void load()
   {
     uint16_t address = STORAGE_DATA_ADDR;
-    eeprom_read_block((void*)&this->data, (const uint8_t*)address, sizeof(FPersistentData));
+    eeprom_read_block((void*)&this->data, (const void*)address, sizeof(FPersistentData));
   }
 
   void save()
   {
     uint16_t address = STORAGE_DATA_ADDR;
-    eeprom_write_block((void*)&this->data, (const uint8_t*), sizeof(FPersistentData));
+    eeprom_write_block((const void*)&this->data, (void*)address, sizeof(FPersistentData));
   }
 
-  void FPersistentData& getData()
+  FPersistentData& getData()
   {
     return this->data;
   }
 
  private:
-  FPersistenData data;
+  FPersistentData data;
 };
 
 #endif
