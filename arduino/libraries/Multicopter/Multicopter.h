@@ -4,7 +4,7 @@
 class Multicopter
 {
  public:
-  Multicopter(IMulticopterSetup& setup);
+  Multicopter(IMulticopterSetup& setup, MulticopterData& data);
 
   void arm();
   // throttle range 0.0 to 1.0
@@ -14,6 +14,8 @@ class Multicopter
  private:
   float throttle;
   IMulticopterSetup& multicopterSetup;
+  MulticopterData& multicopterData;
+  ControlSystem controlSystem;
 };
 
 #endif
