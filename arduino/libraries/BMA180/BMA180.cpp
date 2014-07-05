@@ -51,7 +51,7 @@ void BMA180::setFilter(FILTER f)
 
 float BMA180::getGSensitivitySI()
 {
-    switch(m_gSensitivity)
+  switch(m_gSensitivity)
     {
         case G1: return 1.0;
         case G15: return 1.5;
@@ -65,13 +65,13 @@ float BMA180::getGSensitivitySI()
 
 void BMA180::readAccelerationSI(float *accX, float *accY, float *accZ)
 {
-	float gSens = getGSensitivitySI();
+  float gSens = getGSensitivitySI();
 	
-	int16_t x,y,z;
+  int16_t x,y,z;
 	
-	readAccelerationRaw(&x, &y, &z);
+  readAccelerationRaw(&x, &y, &z);
 	
-	*accX = (float)x/8191.0 * gSens;
-	*accY = (float)y/8191.0 * gSens;
-	*accZ = (float)z/8191.0 * gSens;
+  *accX = (float)x/8191.0 * gSens;
+  *accY = (float)y/8191.0 * gSens;
+  *accZ = (float)z/8191.0 * gSens;
 }

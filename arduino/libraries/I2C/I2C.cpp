@@ -40,7 +40,7 @@ void I2C::read(uint8_t devAddr, uint8_t readAddr, uint8_t nBytes, uint8_t buff[]
   Wire.beginTransmission(devAddr); 
   Wire.write(readAddr);
   Wire.endTransmission();
-  
+  :  
   Wire.beginTransmission(devAddr); 
   Wire.requestFrom(devAddr, nBytes);
   
