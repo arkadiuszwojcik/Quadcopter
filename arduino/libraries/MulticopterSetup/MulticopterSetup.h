@@ -1,7 +1,7 @@
 #ifndef MulticopterSetup_h
 #define MulticopterSetup_h
 
-class IMulticopterSetup
+class MulticopterSetup
 {
  public:
   virtual void arm()=0;

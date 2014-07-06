@@ -1,13 +1,13 @@
 #ifndef Multicopter_h
 #define Multicopter_h
 
-#include "IMulticopterSetup.h"
-#include "ControlSystem.h"
-
 class Multicopter
 {
  public:
-  Multicopter(IMulticopterSetup& setup, MulticopterData& data);
+  Multicopter(MulticopterSetup& setup, MulticopterData& data)
+	: multicopterSetup(setup)
+	, multicopterData(data)
+	{}
 
   void arm();
   // throttle range 0.0 to 1.0
@@ -16,7 +16,7 @@ class Multicopter
 
  private:
   float throttle;
-  IMulticopterSetup& multicopterSetup;
+  MulticopterSetup& multicopterSetup;
   MulticopterData& multicopterData;
   ControlSystem controlSystem;
 };

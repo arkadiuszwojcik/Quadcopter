@@ -1,8 +1,6 @@
 #ifndef AxisCascadeControl_h
 #define AxisCascadeControl_h
 
-#include "../PID/PID.h"
-
 class AxisCascadeControl
 {
  public:

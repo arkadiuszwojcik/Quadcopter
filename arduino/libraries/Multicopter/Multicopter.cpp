@@ -1,8 +1,6 @@
+#include "../MulticopterSetup/MulticopterSetup.h"
+#include "../ControlSystem/ControlSystem.h"
 #include "Multicopter.h"
-
-Multicopter::Multicopter(IMulticopterSetup& setup)
-  : multicopterSetup(setup)
-{}
 
 void Multicopter::arm()
 {

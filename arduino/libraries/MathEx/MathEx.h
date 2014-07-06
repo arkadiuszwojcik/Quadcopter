@@ -12,8 +12,8 @@ class MathEx
 public:
 	static float fastInvSqrt(float number) 
 	{
-          union {
-            float f;
+      union {
+        float f;
 	    int32_t i;
 	  } y;
 
@@ -26,41 +26,41 @@ public:
 	static float truncate(float val, float min, float max)
 	{
 	  if (val > max) return max;
-          if (val < min) return min;
-          return val;
+      if (val < min) return min;
+      return val;
 	}
 
-        static int32_t max(int32_t a, int32_t b)
-        {
-          if (a > b) return a;
-          return b;
-        }
+	static int32_t max(int32_t a, int32_t b)
+	{
+	  if (a > b) return a;
+	  return b;
+	}
 
-        static int32_t max(int32t* table, int len)
-        {
-          assert(len > 0);
-          int32_t max = table[0];
+	static int32_t arrayMax(int32_t* table, int32_t len)
+	{
+	  //assert(len > 0);
+	  int32_t max = table[0];
 
-          for (int i = 1; i < len; i++)
-            {
-              if (table[i] > max) max = table[i];
-            }
+	  for (int i = 1; i < len; i++)
+		{
+		  if (table[i] > max) max = table[i];
+		}
 
-          return max;
-        }
+	  return max;
+	}
 
-        static int32_t min(int32_t* table, int len)
-        {
-          assert(len > 0);
-          int32_t min = table[0];
+	static int32_t min(int32_t* table, int32_t len)
+	{
+	  //assert(len > 0);
+	  int32_t min = table[0];
 
-          for (int i = 1; i < len; i++)
-            {
-              if (table[i] < min) min = table[i];
-            }
+	  for (int i = 1; i < len; i++)
+		{
+		  if (table[i] < min) min = table[i];
+		}
 
-          return min;
-        }
+	  return min;
+	}
 };
 
 #endif
