@@ -1,6 +1,10 @@
 #ifndef ITG3200Gyroscope_h
 #define ITG3200Gyroscope_h
 
+#include "../I2C/I2C.h"
+#include "../Sensors/Sensors.h"
+#include "../ITG3200/ITG3200.h"
+
 class ITG3200Gyroscope : public IGyroscope
 {
 public:

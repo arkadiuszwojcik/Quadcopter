@@ -1,6 +1,8 @@
 #ifndef IMU_h
 #define IMU_h
 
+#include "../Sensors/Sensors.h"
+
 #define twoKpDef  (2.0f * 0.5f) // 2 * proportional gain
 #define twoKiDef  (2.0f * 0.1f) // 2 * integral gain
 
