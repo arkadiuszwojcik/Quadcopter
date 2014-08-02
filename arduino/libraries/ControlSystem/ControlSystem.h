@@ -4,31 +4,57 @@
 class ControlSystem
 {
  public:
- ControlSystem(MulticopterData& data, FreeIMU& imu, MulticopterSetup& multicopter)
-   : data(data), imu(imu), multicopter(multicopter),
-   rollController(&rollAngle, &gyroRollRate, &desiredRollAngle, &rollPid),
-   pitchController(&pitchAngle, &gyroPitchRate, &desiredPitchAngle, &pitchPid)
-    {}
+  ControlSystem(ControlSystemData& data)
+   : data(data),
+   //rollController(&rollAngle, &gyroRollRate, &desiredRollAngle, &rollPid),
+   //pitchController(&pitchAngle, &gyroPitchRate, &desiredPitchAngle, &pitchPid)
+   yawController(&yawAngle, &yawPid, &desiredYawAngle, 0, 0, 0),
+   rollController(&rollAngle, &rollPid, &desiredRollAngle, 0, 0, 0),
+   pitchController(&pitchAngle, &pitchPid, &desiredPitchAngle, 0, 0, 0)
+  {
+    this->desiredYawAngle = 0;
+    this->desiredPitchAngle = 0;
+    this->desiredRollAngle = 0;
 
-  void update(float dt);
+    this->yawAngle = 0;
+    this->pitchAngle = 0;
+    this->rollAngle = 0;
+    //this->gyroRollRate = 0;
+    //this->gyroPitchRate = 0;
+    this->yawPid = 0;
+    this->rollPid = 0;
+    this->pitchPid = 0;
+  }
+
+  void update(float dt, float roll, float pitch, float yaw, float* yawPid, float* rollPid, float* pitchPid);
+  void debug(float* outRollAngle, float* outPitchAngle, float* outYawAngle)
+  {
+    *outRollAngle = this->rollAngle;
+    *outPitchAngle = this->pitchAngle;
+    *outYawAngle = this->yawAngle;
+  }
 
  private:
-  AxisCascadeControl rollController;
-  AxisCascadeControl pitchController;
+  //AxisCascadeControl rollController;
+  //AxisCascadeControl pitchController;
+  PID yawController;
+  PID pitchController;
+  PID rollController;
 
-  FreeIMU& imu;
-  MulticopterData& data;
-  MulticopterSetup& multicopter;
+  ControlSystemData& data;
 
-  float rollAngle;
+  float yawAngle;
   float pitchAngle;
+  float rollAngle;
 
-  float gyroRollRate;
-  float gyroPitchRate;
+  //float gyroRollRate;
+  //float gyroPitchRate;
   
-  float desiredRollAngle;
+  float desiredYawAngle;
   float desiredPitchAngle;
+  float desiredRollAngle;
 
+  float yawPid;
   float rollPid;
   float pitchPid;
 };

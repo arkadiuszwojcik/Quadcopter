@@ -1,8 +1,6 @@
 #ifndef MathEx_h
 #define MathEx_h
 
-#include <Math.h>
-
 /**
 * Fast inverse square root implementation. Compatible both for 32 and 8 bit microcontrollers.
 * @see http://en.wikipedia.org/wiki/Fast_inverse_square_root
@@ -30,7 +28,7 @@ public:
       return val;
 	}
 
-	static int32_t max(int32_t a, int32_t b)
+	static int32_t maxEx(int32_t a, int32_t b)
 	{
 	  if (a > b) return a;
 	  return b;
@@ -60,6 +58,17 @@ public:
 		}
 
 	  return min;
+	}
+
+	static void rotateZ45(float* x, float* y, float* z)
+	{
+		float p = 0.70710678;
+		float tmpX = p* (*x) - p* (*y);
+		float tmpY = p* (*x) + p* (*y);
+		float tmpZ = *z;
+		*x = tmpX;
+		*y = tmpY;
+		*z = tmpZ;
 	}
 };
 

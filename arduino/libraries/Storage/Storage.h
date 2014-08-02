@@ -1,9 +1,21 @@
-#ifndef MulticopterData_h
-#define MulticopterData_h
+#ifndef Storage_h
+#define Storage_h
 
 #include <avr/eeprom.h>
 
-#define STORAGE_DATA_ADDR 0x00
+#define PERSISTENT_DATA_ADDR 0x00
+
+struct ControlSystemData
+{
+  float rollPID[3];
+  float pitchPID[3];
+  float yawPID[3];
+  float minPidValue;
+  float maxPidValue;
+  bool isYawControlEnabled;
+  bool isPitchControlEnabled;
+  bool isRollControlEnabled;
+};
 
 struct FPersistentData
 {
@@ -11,25 +23,23 @@ struct FPersistentData
   float accelerometerOffsets[3];
   float magnetometerOffsets[3];
   float magnetometerDeclination;
-  float rollPID[3];
-  float pitchPID[3];
-  float yawPID[3];
-  uint16_t motorMinSig;
-  uint16_t motorMaxSig;
+  ControlSystemData controlSystemData;
+  uint16_t motorMinSignal;
+  uint16_t motorMaxSignal;
 };
 
-class MulticopterData
+class Storage
 {
  public:
   void load()
   {
-    uint16_t address = STORAGE_DATA_ADDR;
+    uint16_t address = PERSISTENT_DATA_ADDR;
     eeprom_read_block((void*)&this->data, (const void*)address, sizeof(FPersistentData));
   }
 
   void save()
   {
-    uint16_t address = STORAGE_DATA_ADDR;
+    uint16_t address = PERSISTENT_DATA_ADDR;
     eeprom_write_block((const void*)&this->data, (void*)address, sizeof(FPersistentData));
   }
 

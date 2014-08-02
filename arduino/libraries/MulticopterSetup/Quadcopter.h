@@ -12,14 +12,15 @@ class Quadcopter : public MulticopterSetup
  public:
   Quadcopter(uint8_t frontMotorPin, uint8_t rearMotorPin, uint8_t rightMotorPin, uint8_t leftMotorPin)
   {
-	this->pins[FRONT_MOTOR] = frontMotorPin;
-	this->pins[REAR_MOTOR]  = rearMotorPin;
-	this->pins[RIGHT_MOTOR] = rightMotorPin;
-	this->pins[LEFT_MOTOR]  = leftMotorPin;
+    this->pins[FRONT_MOTOR] = frontMotorPin;
+    this->pins[REAR_MOTOR]  = rearMotorPin;
+    this->pins[RIGHT_MOTOR] = rightMotorPin;
+    this->pins[LEFT_MOTOR]  = leftMotorPin;
   }
 
   void arm();
-  void update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID);
+  void disarm();
+  void update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, int32_t* out);
 
   void setMotorThrottleRange(uint16_t minMicroSec, uint16_t maxMicroSec)
   {

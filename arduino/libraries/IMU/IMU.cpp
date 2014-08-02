@@ -20,6 +20,12 @@ FreeIMU::FreeIMU(IAccelerometer& acc, IGyroscope& gyro, IMagnetometer& magn)
 	twoKp = twoKpDef;
 	twoKi = twoKiDef;
 	integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;
+	lastUpdate = now = 0;
+}
+
+void init()
+{
+	lastUpdate = Process::micros();
 }
 
 void FreeIMU::getEuler(float * angles)
@@ -36,6 +42,8 @@ void FreeIMU::getYawPitchRoll(float * ypr)
 	ypr[0] *= 180/M_PI;
 	ypr[1] *= 180/M_PI; 
 	ypr[2] *= 180/M_PI; 
+
+	//MathEx::rotateZ45(&ypr[2], &ypr[1], &ypr[0]);
 }
 
 void FreeIMU::getEulerRad(float * angles)

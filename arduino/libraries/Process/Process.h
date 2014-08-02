@@ -10,6 +10,11 @@ public:
 	{
 		return ::micros();
 	}
+
+  static uint32_t millis()
+  {
+    return ::millis();
+  }
 	
 	static void delay(uint32_t ms)
 	{

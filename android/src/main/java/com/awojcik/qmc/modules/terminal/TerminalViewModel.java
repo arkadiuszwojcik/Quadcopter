@@ -92,7 +92,7 @@ public class TerminalViewModel
 	
 	private void clearInputControl()
 	{
-		this.InputText.set("");
+		//this.InputText.set("");
 	}
 	
 	private void scrollDown()

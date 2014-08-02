@@ -6,7 +6,7 @@
 class I2C
 {
 public:
-    I2C();
+    void init();
     uint8_t scanBus(uint8_t nBytes, uint8_t buff[]);
 	
     void write(uint8_t devAddr, uint8_t writeAddr, uint8_t val);
