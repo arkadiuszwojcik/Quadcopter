@@ -14,7 +14,7 @@ class FreeIMU
 public:
   FreeIMU(IAccelerometer& acc, IGyroscope& gyro, IMagnetometer& magn);
 
-  void init();
+  void reset();
   void getEuler(float * angles);
   void getYawPitchRoll(float * ypr);
   void getEulerRad(float * angles);

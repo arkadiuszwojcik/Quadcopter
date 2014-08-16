@@ -47,7 +47,7 @@ public:
 	  return max;
 	}
 
-	static int32_t min(int32_t* table, int32_t len)
+	static int32_t minEx(int32_t* table, int32_t len)
 	{
 	  //assert(len > 0);
 	  int32_t min = table[0];

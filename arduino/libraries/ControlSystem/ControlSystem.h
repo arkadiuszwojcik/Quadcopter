@@ -27,12 +27,6 @@ class ControlSystem
   }
 
   void update(float dt, float roll, float pitch, float yaw, float* yawPid, float* rollPid, float* pitchPid);
-  void debug(float* outRollAngle, float* outPitchAngle, float* outYawAngle)
-  {
-    *outRollAngle = this->rollAngle;
-    *outPitchAngle = this->pitchAngle;
-    *outYawAngle = this->yawAngle;
-  }
 
  private:
   //AxisCascadeControl rollController;

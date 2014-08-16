@@ -1,6 +1,7 @@
 #ifndef AxisCascadeControl_h
 #define AxisCascadeControl_h
 
+/*
 class AxisCascadeControl
 {
  public:
@@ -20,5 +21,6 @@ class AxisCascadeControl
   PID ratePID;
   float desiredGyroRate;
 };
+*/
 
 #endif

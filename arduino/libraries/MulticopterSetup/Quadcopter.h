@@ -20,7 +20,7 @@ class Quadcopter : public MulticopterSetup
 
   void arm();
   void disarm();
-  void update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, int32_t* out);
+  void update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, uint16_t* motors);
 
   void setMotorThrottleRange(uint16_t minMicroSec, uint16_t maxMicroSec)
   {

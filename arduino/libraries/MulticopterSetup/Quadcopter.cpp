@@ -45,6 +45,7 @@ void Quadcopter::arm()
   this->motors[REAR_MOTOR].write(0);
   this->motors[RIGHT_MOTOR].write(0);
   this->motors[LEFT_MOTOR].write(0);
+  Process::delay(2000);
 }
 
 void Quadcopter::disarm()
@@ -60,7 +61,7 @@ void Quadcopter::disarm()
   this->motors[LEFT_MOTOR].detach();
 }
 
-void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, int32_t* out)
+void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, uint16_t* motors)
 {
   uint16_t newThrottle = this->getThrottleInMicroSec(throttle);
 
@@ -88,16 +89,10 @@ void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uin
   this->motors[RIGHT_MOTOR].writeMicroseconds(motorsThrottle[RIGHT_MOTOR]);
   this->motors[LEFT_MOTOR].writeMicroseconds(motorsThrottle[LEFT_MOTOR]);
 
-  //out[0] = motorsThrottle[FRONT_MOTOR];
-  //out[1] = motorsThrottle[REAR_MOTOR];
-  //out[2] = motorsThrottle[RIGHT_MOTOR];
-  //out[3] = motorsThrottle[LEFT_MOTOR];
-
-  out[0] = pitchPID;
-  out[1] = rollPID;;
-  out[2] = yawPID;
-  out[3] = yawPID;
-  out[4] = newThrottle;
+  motors[0] = motorsThrottle[FRONT_MOTOR];
+  motors[1] = motorsThrottle[REAR_MOTOR];
+  motors[2] = motorsThrottle[RIGHT_MOTOR];
+  motors[3] = motorsThrottle[LEFT_MOTOR];
 }
 
 

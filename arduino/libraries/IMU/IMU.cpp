@@ -23,7 +23,7 @@ FreeIMU::FreeIMU(IAccelerometer& acc, IGyroscope& gyro, IMagnetometer& magn)
 	lastUpdate = now = 0;
 }
 
-void init()
+void FreeIMU::reset()
 {
 	lastUpdate = Process::micros();
 }
@@ -42,8 +42,6 @@ void FreeIMU::getYawPitchRoll(float * ypr)
 	ypr[0] *= 180/M_PI;
 	ypr[1] *= 180/M_PI; 
 	ypr[2] *= 180/M_PI; 
-
-	//MathEx::rotateZ45(&ypr[2], &ypr[1], &ypr[0]);
 }
 
 void FreeIMU::getEulerRad(float * angles)

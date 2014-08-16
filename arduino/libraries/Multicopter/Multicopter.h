@@ -7,6 +7,7 @@ class Multicopter
   Multicopter(MulticopterSetup& setup, Storage& storage, FreeIMU& imu)
   : data(storage.getData())
   , multicopterSetup(setup)
+  , imu(imu)
   , controlSystem(storage.getData().controlSystemData)
   {}
 
@@ -26,22 +27,31 @@ class Multicopter
     this->throttle = value;
   }
 
-  void update(float dt, float roll, float pitch, float yaw, int32_t* out1, float* out2)
+  void update(float dt, float* pids, float* angles, uint16_t* motorData)
   {
+    float ypr[3];
     float yawPID, rollPID, pitchPID;
     yawPID = rollPID = pitchPID = 0;
-    this->controlSystem.update(dt, roll, pitch, yaw, &yawPID, &rollPID, &pitchPID);
-    this->controlSystem.debug(&out2[0], &out2[1], &out2[2]);
-    //out2[0] = pitch;
-    //out2[1] = roll;
-    //out2[2] = yaw;
-    out2[3] = dt;
+
+    this->imu.getYawPitchRoll(ypr);
+    MathEx::rotateZ45(&ypr[2], &ypr[1], &ypr[0]);
+
+    this->controlSystem.update(dt, ypr[2], ypr[1], ypr[0], &yawPID, &rollPID, &pitchPID);
     this->multicopterSetup.setMotorThrottleRange(this->data.motorMinSignal, this->data.motorMaxSignal);
-    this->multicopterSetup.update(this->throttle, rollPID, pitchPID, yawPID, out1);
+    this->multicopterSetup.update(this->throttle, rollPID, pitchPID, yawPID, motorData);
+
+    pids[0] = yawPID;
+    pids[1] = rollPID;
+    pids[2] = pitchPID;
+
+    angles[0] = ypr[0];
+    angles[1] = ypr[1];
+    angles[2] = ypr[2];
   }
 
  private:
   float throttle;
+  FreeIMU& imu;
   FPersistentData& data;
   MulticopterSetup& multicopterSetup;
   ControlSystem controlSystem;
