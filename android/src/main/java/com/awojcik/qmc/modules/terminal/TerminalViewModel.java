@@ -20,28 +20,24 @@ import com.awojcik.qmc.services.bluetooth.QBluetoothService;
 import com.awojcik.qmc.utilities.ActivityExtensions;
 import com.google.inject.Inject;
 
-import gueei.binding.Command;
 import gueei.binding.observables.CharSequenceObservable;
-import gueei.binding.observables.IntegerObservable;
 import gueei.binding.observables.StringObservable;
 
 public class TerminalViewModel 
 {
-	public com.awojcik.qmc.modules.terminal.commands.SendCommand SendCommand;
+	public final SendCommand SendCommand;
 	
-	public StringObservable InputText = new StringObservable("");
+	public final StringObservable InputText = new StringObservable("");
 
-	public CharSequenceObservable Text = new CharSequenceObservable("");
+	public final CharSequenceObservable Text = new CharSequenceObservable("");
 	
-	private StringBuffer buffer = new StringBuffer();
-	
-	private TerminalSpannableStringBuffer bufferTest = new TerminalSpannableStringBuffer(39);
+	private final TerminalSpannableStringBuffer bufferTest = new TerminalSpannableStringBuffer(39);
 
-	private ServiceManager bluetoothService;
+	private final ServiceManager bluetoothService;
 	
-	private IntraModuleMessenger intraModuleMessenger;
+	private final IntraModuleMessenger intraModuleMessenger;
 	
-	private Activity activity;
+	private final Activity activity;
 	
 	@Inject
 	public TerminalViewModel(

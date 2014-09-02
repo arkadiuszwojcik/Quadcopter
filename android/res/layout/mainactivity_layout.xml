@@ -67,6 +67,13 @@
                         binding:dataSource="TerminalViewModel"
                         />
 
+                <binding.BindableFrameLayout
+                    android:id="@+id/tab_three_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    binding:layoutId="@layout/settings_layout"
+                    />
+
             </FrameLayout>
         </LinearLayout>
     </TabHost>

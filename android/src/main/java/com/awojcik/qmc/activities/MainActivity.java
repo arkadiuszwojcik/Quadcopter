@@ -68,6 +68,7 @@ public class MainActivity extends QRoboBindingActivity
         this.createTabView(tabHost, "Control", R.id.tab_zero_container);
         this.createTabView(tabHost, "IMU", R.id.tab_one_container);
         this.createTabView(tabHost, "Console", R.id.tab_two_container);
+        this.createTabView(tabHost, "Settings", R.id.tab_three_container);
     }
 
     private void createTabView(TabHost host, String name, int viewId)
