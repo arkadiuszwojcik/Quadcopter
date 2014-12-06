@@ -1,6 +1,6 @@
 package com.awojcik.qmc.services.bluetooth;
 
-public interface IQBluetoothSocketCallback 
+public interface BluetoothSocketCallback
 {
 	public void receivedData(String data);
 }

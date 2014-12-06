@@ -6,9 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-class QBluetoothBroadcastReceiver extends BroadcastReceiver
+class BluetoothBroadcastReceiver extends BroadcastReceiver
 {
-	public QBluetoothBroadcastReceiver(IQBluetoothBroadcastReceiverCallback callback)
+	public BluetoothBroadcastReceiver(BluetoothBroadcastReceiverCallback callback)
 	{
 		this.callback = callback;
 	}
@@ -33,5 +33,5 @@ class QBluetoothBroadcastReceiver extends BroadcastReceiver
         }
 	}
 	
-	private final IQBluetoothBroadcastReceiverCallback callback;
+	private final BluetoothBroadcastReceiverCallback callback;
 }

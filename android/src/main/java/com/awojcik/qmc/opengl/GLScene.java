@@ -7,9 +7,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLScene
 {
-    private final List<GLObject> sceneObjects = new LinkedList<GLObject>();
-    private final List<GLSceneRedrawListener> listeners = new LinkedList<GLSceneRedrawListener>();
-
     public void addSceneObject(GLObject obj)
     {
         this.sceneObjects.add(obj);
@@ -40,4 +37,7 @@ public class GLScene
             gl.glPopMatrix();
         }
     }
+
+    private final List<GLObject> sceneObjects = new LinkedList<GLObject>();
+    private final List<GLSceneRedrawListener> listeners = new LinkedList<GLSceneRedrawListener>();
 }

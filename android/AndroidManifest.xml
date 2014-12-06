@@ -17,7 +17,7 @@
       </intent-filter>
     </activity>
     
-    <service android:name="com.awojcik.qmc.services.bluetooth.QBluetoothService"/>
+    <service android:name=".services.bluetooth.BluetoothService"/>
     
   </application>
 

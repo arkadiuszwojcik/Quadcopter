@@ -6,8 +6,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="left">
-    <SeekBar
-            android:layout_width="210dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            binding:text="Text"
+            />
+        <SeekBar
+            android:layout_width="250dp"
             android:layout_height="400dp"
             android:id="@+id/seekBar"
             android:max="180"
@@ -15,12 +25,21 @@
             android:layout_gravity="center_vertical"
             binding:progress="PrimaryProgress"
             binding:onSeekBarChange="SeekBarChange"/>
-    <TextView
-            android:layout_width="wrap_content"
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <Button
+            android:layout_width="390dip"
             android:layout_height="wrap_content"
-            android:minLines="15"
-            android:maxLines="40"
-            android:layout_gravity="center_vertical"
-            binding:text="Text"
-            />
+            android:text="Arm"
+            binding:onClick="LoadCommand"/>
+        <Button
+            android:layout_width="390dip"
+            android:layout_height="wrap_content"
+            android:text="Disarm"
+            binding:onClick="SaveCommand"/>
+    </LinearLayout>
 </LinearLayout>

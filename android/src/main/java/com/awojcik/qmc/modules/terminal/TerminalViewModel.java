@@ -14,9 +14,10 @@ import com.awojcik.qmc.modules.common.IIntraModuleMessageListener;
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
 import com.awojcik.qmc.modules.terminal.commands.SendCommand;
 import com.awojcik.qmc.modules.terminal.messages.SendMessage;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
+import com.awojcik.qmc.services.bluetooth.BluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
 import com.awojcik.qmc.services.ServiceManager;
-import com.awojcik.qmc.services.bluetooth.QBluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceMessages;
 import com.awojcik.qmc.utilities.ActivityExtensions;
 import com.google.inject.Inject;
 
@@ -42,7 +43,7 @@ public class TerminalViewModel
 	@Inject
 	public TerminalViewModel(
 			Activity activity,
-			QBluetoothServiceProvider bluetoothServiceProvider,
+			BluetoothServiceFactory bluetoothServiceProvider,
 			IntraModuleMessenger intraModuleMessenger,
 			SendCommand sendCommand)
 	{
@@ -76,19 +77,13 @@ public class TerminalViewModel
 
     private Message getSendCommandMessage(String strData)
     {
-        Message msg = new Message();
-        msg.what = QBluetoothService.MSG_SEND_DATA_CHUNK_REQUEST;
-
-        Bundle data = new Bundle();
-        data.putString(QBluetoothService.KEY_MSG_SEND_DATA_CHUNK_REQUEST_DATA, strData);
-        msg.setData(data);
-
+        Message msg = BluetoothServiceMessages.createSendDataChunkMessage(strData);
         return msg;
     }
 	
 	private void clearInputControl()
 	{
-		//this.InputText.set("");
+		this.InputText.set("");
 	}
 	
 	private void scrollDown()
@@ -120,15 +115,15 @@ public class TerminalViewModel
     	{
     		try
     		{
-    			if (msg.what == QBluetoothService.MSG_DEVICE_CONNECTED_RESPONSE)
+    			if (msg.what == BluetoothServiceMessages.MSG_DEVICE_CONNECTED_RESPONSE)
     			{
-    				String address = msg.getData().getString(QBluetoothService.KEY_MSG_DEVICE_CONNECTED_RESPONSE_ADDRESS);
+    				String address = BluetoothServiceMessages.getAddressFromDeviceConnectedMessage(msg);
     				TerminalViewModel.this.appendLine("Device connected: " + address);
     			}
     			
-    			if (msg.what == QBluetoothService.MSG_DATA_CHUNK_RESPONSE)
+    			if (msg.what == BluetoothServiceMessages.MSG_DATA_CHUNK_RESPONSE)
     			{
-    				String data = msg.getData().getString(QBluetoothService.KEY_MSG_DATA_CHUNK_RESPONSE_DATA);
+    				String data = BluetoothServiceMessages.getDataFromDataChunkMessage(msg);
     				TerminalViewModel.this.appendLine("New data: " + data);
     			}
     		} 

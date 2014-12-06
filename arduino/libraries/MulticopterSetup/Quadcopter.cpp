@@ -66,10 +66,18 @@ void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uin
   uint16_t newThrottle = this->getThrottleInMicroSec(throttle);
 
   int32_t motorsThrottle[MOTORS_COUNT];
+  
+  #ifdef QUADCOPTER_PLUS
   motorsThrottle[RIGHT_MOTOR] = newThrottle + pitchPID - yawPID;
   motorsThrottle[LEFT_MOTOR]  = newThrottle - pitchPID - yawPID;
   motorsThrottle[FRONT_MOTOR] = newThrottle + rollPID + yawPID;
   motorsThrottle[REAR_MOTOR]  = newThrottle - rollPID + yawPID;
+  #else // QUADCOPTER_X
+  motorsThrottle[RIGHT_MOTOR] = newThrottle + pitchPID - rollPID - yawPID;
+  motorsThrottle[LEFT_MOTOR]  = newThrottle - pitchPID + rollPID - yawPID;
+  motorsThrottle[FRONT_MOTOR] = newThrottle + pitchPID - rollPID + yawPID;
+  motorsThrottle[REAR_MOTOR]  = newThrottle - pitchPID + rollPID + yawPID;
+  #endif
 
   int32_t highestThrottle = MathEx::arrayMax(motorsThrottle, MOTORS_COUNT);
   int32_t throttleOutpass = MathEx::maxEx(0, (int32_t)(highestThrottle - this->maxMotorMicroSec));

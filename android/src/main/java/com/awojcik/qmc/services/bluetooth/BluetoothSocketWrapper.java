@@ -7,9 +7,9 @@ import java.util.UUID;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-public class QBluetoothSocket
+public class BluetoothSocketWrapper
 {
-	public QBluetoothSocket(BluetoothDevice bluetoothDevice, IQBluetoothSocketCallback callback)
+	public BluetoothSocketWrapper(BluetoothDevice bluetoothDevice, BluetoothSocketCallback callback)
 	{
 		this.bluetoothDevice = bluetoothDevice;
 		this.callback = callback;
@@ -24,9 +24,8 @@ public class QBluetoothSocket
 				this.socket.close();
 			}
 		}
-		catch (Exception e)
+		catch (IOException ex)
 		{
-			
 		}
 	}
 	
@@ -43,7 +42,7 @@ public class QBluetoothSocket
 			return false;
 		}
 		
-		this.beginListenForData();
+		this.startReceiverThread();
 		return true;
 	}
 	
@@ -61,10 +60,10 @@ public class QBluetoothSocket
 		}
 	}
 	
-	private void beginListenForData()
+	private void startReceiverThread()
 	{
-		Thread workingThread = new Thread(new QReceiveWorker(this));
-		workingThread.start();
+		Thread receiverThread = new Thread(new BluetoothReceiverThread(this));
+        receiverThread.start();
 	}
 	
 	public BluetoothSocket getInternalBluetoothSocket()
@@ -72,15 +71,13 @@ public class QBluetoothSocket
 		return this.socket;
 	}
 	
-	public IQBluetoothSocketCallback getCallbackObject()
+	public BluetoothSocketCallback getCallbackObject()
 	{
 		return this.callback;
 	}
 	
 	private BluetoothSocket socket;
-	
 	private final BluetoothDevice bluetoothDevice;
-	private final IQBluetoothSocketCallback callback;
-	
+	private final BluetoothSocketCallback callback;
 	private static final UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 }

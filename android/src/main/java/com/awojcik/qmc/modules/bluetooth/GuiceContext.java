@@ -1,15 +1,15 @@
 package com.awojcik.qmc.modules.bluetooth;
 
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 class GuiceContext extends AbstractModule 
 {
-	private final QBluetoothServiceProvider mBluetoothServiceProvider;
+	private final BluetoothServiceFactory mBluetoothServiceProvider;
 	
-	public GuiceContext(QBluetoothServiceProvider bluetoothServiceProvider)
+	public GuiceContext(BluetoothServiceFactory bluetoothServiceProvider)
 	{
 		this.mBluetoothServiceProvider = bluetoothServiceProvider;
 	}
@@ -17,7 +17,7 @@ class GuiceContext extends AbstractModule
 	@Override
 	protected void configure() 
 	{
-		this.bind(QBluetoothServiceProvider.class).toInstance(this.mBluetoothServiceProvider);
+		this.bind(BluetoothServiceFactory.class).toInstance(this.mBluetoothServiceProvider);
 		this.bind(IntraModuleMessenger.class).in(Singleton.class);
 	}
 }

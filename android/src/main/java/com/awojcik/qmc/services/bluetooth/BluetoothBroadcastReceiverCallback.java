@@ -2,7 +2,7 @@ package com.awojcik.qmc.services.bluetooth;
 
 import android.bluetooth.BluetoothClass;
 
-interface IQBluetoothBroadcastReceiverCallback
+interface BluetoothBroadcastReceiverCallback
 {
 	public void deviceDiscovered(String name, String address, BluetoothClass deviceClass);
 	public void discoveryStarted();

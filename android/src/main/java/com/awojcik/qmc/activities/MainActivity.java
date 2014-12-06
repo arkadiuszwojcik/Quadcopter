@@ -1,17 +1,12 @@
 package com.awojcik.qmc.activities;
 
-import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
 import com.awojcik.qmc.R;
-import com.awojcik.qmc.modules.imu.ImuScene;
-import com.awojcik.qmc.modules.messages.MessageConverter;
-import com.awojcik.qmc.opengl.GLSurfaceView;
 import com.awojcik.qmc.mvvm.viewmodels.QMainViewModel;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
 import com.awojcik.qmc.services.ServiceManager;
-import com.awojcik.qmc.services.bluetooth.QBluetoothService;
-import com.awojcik.qmc.utilities.QRoboBindingActivity;
+import com.awojcik.qmc.utilities.RoboBindingActivity;
 import com.google.inject.Inject;
 
 import android.os.Bundle;
@@ -19,19 +14,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.TabHost;
 
-public class MainActivity extends QRoboBindingActivity
+public class MainActivity extends RoboBindingActivity
 {
-    private static String TAG = "QMC:MainActivity";
+    private static String TAG = "MainActivity";
 
 	@Inject 
-	private QBluetoothServiceProvider bluetoothServiceProvider;
-	
-	private ServiceManager bluetoothService;
-
-    private EventBus eventBus;
+	private BluetoothServiceFactory bluetoothServiceProvider;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -42,9 +32,6 @@ public class MainActivity extends QRoboBindingActivity
         this.startBluetoothService();
         this.bindViewModel();
 
-        this.eventBus = new EventBus();
-
-        //this.setupOpenGlFrame();
         this.setupTabControl();
     }
     
@@ -52,12 +39,6 @@ public class MainActivity extends QRoboBindingActivity
     public void onDestroy()
     {
     	super.onDestroy();
-    }
-
-    private void setupOpenGlFrame()
-    {
-        FrameLayout frame = (FrameLayout)this.findViewById(R.id.glSurfaceFrame);
-        frame.addView(new GLSurfaceView(this, new ImuScene(this.eventBus)));
     }
 
     private void setupTabControl()
@@ -88,8 +69,8 @@ public class MainActivity extends QRoboBindingActivity
     
     private void startBluetoothService()
     {
-    	this.bluetoothService = bluetoothServiceProvider.Create(new BluetoothServiceHandler());
-        this.bluetoothService.start();
+        ServiceManager bluetoothService = bluetoothServiceProvider.Create(null);
+        bluetoothService.start();
     }
     
     private void bindViewModel()
@@ -98,20 +79,5 @@ public class MainActivity extends QRoboBindingActivity
     	this.inflateAndBind(R.xml.mainactivity_metadata, mainViewModel);
         mainViewModel.init();
     }
-    
-    class BluetoothServiceHandler extends Handler
-    {
-    	@Override
-    	public void handleMessage(Message msg)
-    	{
-            if (msg.what == QBluetoothService.MSG_DATA_CHUNK_RESPONSE)
-            {
-                String data = msg.getData().getString(QBluetoothService.KEY_MSG_DATA_CHUNK_RESPONSE_DATA);
-                Object m = MessageConverter.fromString(data);
-                if (m != null) MainActivity.this.eventBus.post(m);
-            }
-    	}
-    }
-
 }
 

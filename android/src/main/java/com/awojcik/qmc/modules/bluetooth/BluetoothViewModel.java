@@ -2,10 +2,11 @@ package com.awojcik.qmc.modules.bluetooth;
 
 import com.awojcik.qmc.modules.common.IIntraModuleMessageListener;
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
+import com.awojcik.qmc.services.bluetooth.BluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
 import com.awojcik.qmc.services.AbstractService;
 import com.awojcik.qmc.services.ServiceManager;
-import com.awojcik.qmc.services.bluetooth.QBluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceMessages;
 import com.google.inject.Inject;
 
 import android.bluetooth.BluetoothClass;
@@ -55,7 +56,7 @@ public class BluetoothViewModel
 	
 	@Inject
 	public BluetoothViewModel(
-			QBluetoothServiceProvider bluetoothServiceProvider,
+			BluetoothServiceFactory bluetoothServiceProvider,
 			IntraModuleMessenger intraModuleMessenger,
 			ScanCommand scanCommand,
 			StopScanCommand stopScanCommand,
@@ -80,26 +81,6 @@ public class BluetoothViewModel
 		{
 			
 		}
-	}
-	
-	private Message getEmptyMessage(int what)
-	{
-		Message msg = new Message();
-		msg.what = what;
-		
-		return msg;
-	}
-	
-	private Message getConnectMessage(String address)
-	{
-		Message msg = new Message();
-		msg.what = QBluetoothService.MSG_CONNECT_TO_DEVICE_REQUEST;
-		
-		Bundle data = new Bundle();
-		data.putString(QBluetoothService.KEY_MSG_CONNECT_TO_DEVICE_REQUEST_ADDRESS, address);
-		msg.setData(data);
-		
-		return msg;
 	}
 	
 	private void onStartScanning()
@@ -137,7 +118,7 @@ public class BluetoothViewModel
 	{
 		public void onCancel(DialogInterface dialog) 
 		{
-			Message msg = BluetoothViewModel.this.getEmptyMessage(QBluetoothService.MSG_STOP_DISCOVER_REQUEST);
+			Message msg = BluetoothServiceMessages.createStopDiscoveryMessage();
 			BluetoothViewModel.this.sendMessage(msg);
 		}
 	}
@@ -148,21 +129,20 @@ public class BluetoothViewModel
 		{
 			if (message instanceof ScanMessage)
 			{
-				Message msg = BluetoothViewModel.this.getEmptyMessage(QBluetoothService.MSG_START_DISCOVER_REQUEST);
+				Message msg = BluetoothServiceMessages.createStartDiscoveryMessage();
 				BluetoothViewModel.this.sendMessage(msg);
 			}
 			
 			if (message instanceof StopScanMessage)
 			{
-				Message msg = BluetoothViewModel.this.getEmptyMessage(QBluetoothService.MSG_STOP_DISCOVER_REQUEST);
+				Message msg = BluetoothServiceMessages.createStopDiscoveryMessage();
 				BluetoothViewModel.this.sendMessage(msg);
 			}
 			
 			if (message instanceof ConnectMessage)
 			{
 				String address = ((DeviceEntryViewModel)BluetoothViewModel.this.ClickedItem.get()).Address.get();
-				
-				Message msg = BluetoothViewModel.this.getConnectMessage(address);
+				Message msg = BluetoothServiceMessages.createConnectMessage(address);
 				BluetoothViewModel.this.sendMessage(msg);
 			}
 		}
@@ -179,23 +159,21 @@ public class BluetoothViewModel
     		{
     			if (msg.what == AbstractService.MSG_REGISTER_CLIENT)
     			{
-    				Message m = BluetoothViewModel.this.getEmptyMessage(QBluetoothService.MSG_START_DISCOVER_REQUEST);
+    				Message m = BluetoothServiceMessages.createStartDiscoveryMessage();
     				BluetoothViewModel.this.sendMessage(m);
     			}
-    			if (msg.what == QBluetoothService.MSG_DISCOVERY_STARTED_RESPONSE)
+    			if (msg.what == BluetoothServiceMessages.MSG_DISCOVERY_STARTED_RESPONSE)
     			{
     				BluetoothViewModel.this.onStartScanning();
     			}
-	    		if (msg.what == QBluetoothService.MSG_DISCOVERY_FINISHED_RESPONSE)
+	    		if (msg.what == BluetoothServiceMessages.MSG_DISCOVERY_FINISHED_RESPONSE)
 	    		{
 	    			BluetoothViewModel.this.onFinishScanning();
 	    		}
-	    		if (msg.what == QBluetoothService.MSG_DEVICE_DISCOVERED_RESPONSE)
+	    		if (msg.what == BluetoothServiceMessages.MSG_DEVICE_DISCOVERED_RESPONSE)
 	    		{
-	    			String address = (String)msg.getData().get(QBluetoothService.KEY_MSG_DEVICE_DISCOVERED_RESPONSE_ADDRESS);
-	    			String name = (String)msg.getData().get(QBluetoothService.KEY_MSG_DEVICE_DISCOVERED_RESPONSE_NAME);
-	    			BluetoothClass deviceClass = (BluetoothClass)msg.getData().getParcelable(QBluetoothService.KEY_MSG_DEVICE_DISCOVERED_RESPONSE_CLASS);
-	    			BluetoothViewModel.this.onNewDevice(name, address, deviceClass);
+                    BluetoothServiceMessages.DiscoveredDevice dev = BluetoothServiceMessages.getDeviceFromDeviceDiscoveredMessage(msg);
+	    			BluetoothViewModel.this.onNewDevice(dev.getName(), dev.getAddress(), dev.getDeviceClass());
 	    		}
     		} 
     		catch (Exception e)

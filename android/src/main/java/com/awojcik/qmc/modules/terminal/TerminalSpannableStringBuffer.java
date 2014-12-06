@@ -47,7 +47,7 @@ public class TerminalSpannableStringBuffer
 	
 	private int getLinesNumber(String line)
 	{
-		return StringExtensions.CharCount(line, '\n');
+		return StringExtensions.charCount(line, '\n');
 	}
 	
 	private void removeUpperLines(int num)

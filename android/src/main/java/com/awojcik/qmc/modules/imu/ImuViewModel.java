@@ -4,21 +4,16 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.awojcik.qmc.R;
 import com.awojcik.qmc.modules.messages.MessageConverter;
 import com.awojcik.qmc.opengl.GLSurfaceView;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
-import com.awojcik.qmc.services.bluetooth.QBluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
+import com.awojcik.qmc.services.bluetooth.BluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceMessages;
 import com.google.inject.Inject;
 
-import java.util.Collection;
-
 import de.greenrobot.event.EventBus;
-import gueei.binding.IObservable;
-import gueei.binding.Observer;
-import gueei.binding.viewAttributes.templates.LayoutObservable;
 
 public class ImuViewModel
 {
@@ -27,7 +22,7 @@ public class ImuViewModel
     private final EventBus eventBus;
 
     @Inject
-    public ImuViewModel(Activity activity, EventBus eventBus, QBluetoothServiceProvider bluetoothServiceProvider)
+    public ImuViewModel(Activity activity, EventBus eventBus, BluetoothServiceFactory bluetoothServiceProvider)
     {
         this.activity = activity;
         this.eventBus = eventBus;
@@ -50,9 +45,9 @@ public class ImuViewModel
         @Override
         public void handleMessage(Message msg)
         {
-            if (msg.what == QBluetoothService.MSG_DATA_CHUNK_RESPONSE)
+            if (msg.what == BluetoothServiceMessages.MSG_DATA_CHUNK_RESPONSE)
             {
-                String data = msg.getData().getString(QBluetoothService.KEY_MSG_DATA_CHUNK_RESPONSE_DATA);
+                String data = BluetoothServiceMessages.getDataFromDataChunkMessage(msg);
                 Object m = MessageConverter.fromString(data);
                 if (m != null) ImuViewModel.this.eventBus.post(m);
             }

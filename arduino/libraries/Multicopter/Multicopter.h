@@ -34,7 +34,9 @@ class Multicopter
     yawPID = rollPID = pitchPID = 0;
 
     this->imu.getYawPitchRoll(ypr);
+	#ifdef QUADCOPTER_PLUS
     MathEx::rotateZ45(&ypr[2], &ypr[1], &ypr[0]);
+	#endif
 
     this->controlSystem.update(dt, ypr[2], ypr[1], ypr[0], &yawPID, &rollPID, &pitchPID);
     this->multicopterSetup.setMotorThrottleRange(this->data.motorMinSignal, this->data.motorMaxSignal);

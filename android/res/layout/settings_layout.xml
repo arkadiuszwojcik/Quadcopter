@@ -31,7 +31,7 @@
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="50dip"
-                        android:text="Yaw"/>
+                        android:text="Yaw M"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="YawP"/>
+                        binding:text="YawMasterP"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -51,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="YawI"/>
+                        binding:text="YawMasterI"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="YawD"/>
+                        binding:text="YawMasterD"/>
                 </TableRow>
 
                 <TableRow
@@ -69,7 +69,7 @@
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="50dip"
-                        android:text="Pitch"/>
+                        android:text="Yaw S"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="PitchP"/>
+                        binding:text="YawSlaveP"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="PitchI"/>
+                        binding:text="YawSlaveI"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -99,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="PitchD"/>
+                        binding:text="YawSlaveD"/>
                 </TableRow>
 
                 <TableRow
@@ -107,7 +107,7 @@
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="50dip"
-                        android:text="Roll"/>
+                        android:text="Pitch M"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="RollP"/>
+                        binding:text="PitchMasterP"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="RollI"/>
+                        binding:text="PitchMasterI"/>
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="30dip"
@@ -137,8 +137,121 @@
                         android:layout_height="wrap_content"
                         android:layout_width="80dip"
                         android:inputType="numberDecimal"
-                        binding:text="RollD"/>
+                        binding:text="PitchMasterD"/>
                 </TableRow>
+                <TableRow
+                    android:padding="5dip">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="50dip"
+                        android:text="Pitch S"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="P"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="PitchSlaveP"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="I"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="PitchSlaveI"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="D"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="PitchSlaveD"/>
+                </TableRow>
+
+                <TableRow
+                    android:padding="5dip">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="50dip"
+                        android:text="Roll M"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="P"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollMasterP"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="I"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollMasterI"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="D"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollMasterD"/>
+                </TableRow>
+                <TableRow
+                    android:padding="5dip">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="50dip"
+                        android:text="Roll S"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="P"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollSlaveP"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="I"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollSlaveI"/>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="30dip"
+                        android:paddingLeft="10dip"
+                        android:text="D"/>
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:layout_width="80dip"
+                        android:inputType="numberDecimal"
+                        binding:text="RollSlaveD"/>
+                </TableRow>
+
                 <TableRow
                     android:padding="5dip">
                     <TextView

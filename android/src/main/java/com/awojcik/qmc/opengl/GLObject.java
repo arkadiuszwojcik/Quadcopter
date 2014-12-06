@@ -7,10 +7,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 public abstract class GLObject
 {
-    private float[] translateM = new float[16];
-    private float[] rotationM = new float[16];
-    private float[] transformationM = new float[16];
-
     public GLObject()
     {
         Matrix.setIdentityM(translateM, 0);
@@ -34,4 +30,8 @@ public abstract class GLObject
     }
 
     public abstract void render(GL10 gl);
+
+    private float[] translateM = new float[16];
+    private float[] rotationM = new float[16];
+    private float[] transformationM = new float[16];
 }

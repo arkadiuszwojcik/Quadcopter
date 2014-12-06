@@ -2,7 +2,7 @@ package com.awojcik.qmc.utilities;
 
 public class StringExtensions 
 {
-	public static int CharCount(String str, char c)
+	public static int charCount(String str, char c)
 	{
 		if (str == null) return 0;
 		
@@ -15,4 +15,16 @@ public class StringExtensions
 		
 		return count;
 	}
+
+    public static String join(String[] array, String separator)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0, il = array.length; i < il; i++)
+        {
+            if (i > 0)
+                sb.append(separator);
+            sb.append(array[i]);
+        }
+        return sb.toString();
+    }
 }

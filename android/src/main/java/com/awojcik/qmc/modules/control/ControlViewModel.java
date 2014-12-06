@@ -12,9 +12,10 @@ import gueei.binding.observables.CharSequenceObservable;
 import gueei.binding.observables.IntegerObservable;
 
 import com.awojcik.qmc.modules.common.IntraModuleMessenger;
-import com.awojcik.qmc.providers.QBluetoothServiceProvider;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceFactory;
 import com.awojcik.qmc.services.ServiceManager;
-import com.awojcik.qmc.services.bluetooth.QBluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothService;
+import com.awojcik.qmc.services.bluetooth.BluetoothServiceMessages;
 import com.google.inject.Inject;
 
 public class ControlViewModel
@@ -42,7 +43,7 @@ public class ControlViewModel
     @Inject
     public ControlViewModel(
             Activity activity,
-            QBluetoothServiceProvider bluetoothServiceProvider,
+            BluetoothServiceFactory bluetoothServiceProvider,
             IntraModuleMessenger intraModuleMessenger)
     {
         this.activity = activity;
@@ -66,14 +67,7 @@ public class ControlViewModel
 
     private Message getSendCommandMessage(String strData)
     {
-        Message msg = new Message();
-        msg.what = QBluetoothService.MSG_SEND_DATA_CHUNK_REQUEST;
-
-        Bundle data = new Bundle();
-        data.putString(QBluetoothService.KEY_MSG_SEND_DATA_CHUNK_REQUEST_DATA, strData);
-        msg.setData(data);
-
-        return msg;
+        return BluetoothServiceMessages.createSendDataChunkMessage(strData);
     }
 
     class BluetoothServiceHandler extends Handler
