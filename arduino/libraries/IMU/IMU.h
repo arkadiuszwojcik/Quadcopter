@@ -19,6 +19,7 @@ public:
   void getYawPitchRoll(float * ypr);
   void getEulerRad(float * angles);
   void getYawPitchRollRad(float * ypr);
+  void getGyroYawPitchRollRates(float * ypr);
 
 private:
   void getQuaternion(float * q);
@@ -37,6 +38,7 @@ private:
   volatile float integralFBx,  integralFBy, integralFBz;
   unsigned long lastUpdate, now; // sample period expressed in milliseconds
   float sampleFreq; // half the sample period expressed in seconds
+  float gyroYawRate, gyroPitchRate, gyroRollRate;
 };
 
 #endif

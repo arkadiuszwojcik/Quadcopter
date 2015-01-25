@@ -7,14 +7,15 @@
 
 struct ControlSystemData
 {
-  float rollPID[3];
-  float pitchPID[3];
-  float yawPID[3];
+  // [0] = P, [1] = I, [2] = D, [3] = IMax
+  float outerRollPID[4];
+  float innerRollPID[4];
+  float outerPitchPID[4];
+  float innerPitchPID[4];
+  float outerYawPID[4];
+  float innerYawPID[4];
   float minPidValue;
   float maxPidValue;
-  bool isYawControlEnabled;
-  bool isPitchControlEnabled;
-  bool isRollControlEnabled;
 };
 
 struct FPersistentData

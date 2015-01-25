@@ -22,24 +22,46 @@
 #include <SerialCommand.h>
 #include <Stopwatch.h>
 
+#define QUADCOPTER_SETUP
+#define BMA180_ACCELEROMETER
+#define ITG3200_GYROSCOPE
+#define HMC5883L_MAGNETOMETER
+#define ENABLE_TIMER_POWER_CUT
+#define TIMER_POWER_CUT_INTERVAL 60000
+
 I2C i2c;
-ITG3200Gyroscope gyroscope(i2c);
+
+#ifdef BMA180_ACCELEROMETER
 BMA180Accelerometer accelerometer(i2c);
+#endif
+
+#ifdef ITG3200_GYROSCOPE
+ITG3200Gyroscope gyroscope(i2c);
+#endif
+
+#ifdef HMC5883L_MAGNETOMETER
 HMC5883LMagnetometer magnetometer(i2c);
+#endif
+
 FreeIMU imu(accelerometer, gyroscope, magnetometer);
 
+#ifdef ENABLE_TIMER_POWER_CUT
+Stopwatch power_cut_timer(TIMER_POWER_CUT_INTERVAL);
+#endif
+
+#ifdef QUADCOPTER_SETUP
+Quadcopter frameSetup(4,5,7,9);
+#endif
+
 SerialCommand cmd;
+
 Storage storage;
-//Quadcopter quadcopter(9,7,5,4);
-Quadcopter quadcopter(4,5,7,9);
-Multicopter multicopter(quadcopter, storage, imu);
 
-#define UPDATE_INTERVAL_MILI_SEC 10
-uint32_t lastMicros;
-Stopwatch stopwatch(UPDATE_INTERVAL_MILI_SEC);
-Stopwatch stopwatch2(1000);
+Multicopter multicopter(frameSetup, storage, imu);
 
-bool armed;
+Stopwatch stopwatch(500);
+volatile uint32_t lastMicros;
+volatile bool armed;
 
 void setup()
 {
@@ -65,6 +87,10 @@ void setup()
 
 void arming()
 {
+#ifdef ENABLE_TIMER_POWER_CUT
+  power_cut_timer.reset();
+#endif
+
   multicopter.arm();
   multicopter.setThrottle(0);
   armed = true;
@@ -100,17 +126,20 @@ void save()
 void get()
 {
   ControlSystemData& data = storage.getData().controlSystemData;
-  sendPID1("R",data.rollPID[0], data.rollPID[1], data.rollPID[2]);
-  sendPID1("P", data.pitchPID[0], data.pitchPID[1], data.pitchPID[2]);
-  sendPID1("Y", data.yawPID[0], data.yawPID[1], data.yawPID[2]);
+  sendPID("A",data.outerRollPID[0], data.outerRollPID[1], data.outerRollPID[2], data.outerRollPID[3]);
+  sendPID("B", data.outerPitchPID[0], data.outerPitchPID[1], data.outerPitchPID[2], data.outerPitchPID[3]);
+  sendPID("C", data.outerYawPID[0], data.outerYawPID[1], data.outerYawPID[2], data.outerYawPID[3]);
+  sendPID("D",data.innerRollPID[0], data.innerRollPID[1], data.innerRollPID[2], data.innerRollPID[3]);
+  sendPID("E", data.innerPitchPID[0], data.innerPitchPID[1], data.innerPitchPID[2], data.innerPitchPID[3]);
+  sendPID("F", data.innerYawPID[0], data.innerYawPID[1], data.innerYawPID[2], data.innerYawPID[3]);
   sendPID2(data.minPidValue, data.maxPidValue);
   sendPID3(storage.getData().motorMinSignal, storage.getData().motorMaxSignal);
 }
 
-void sendPID1(char* controller, float p, float i, float d)
+void sendPID(char* controller, float p, float i, float d, float maxI)
 {
-  Serial.print("PID "); Serial.print(controller); Serial.print(" P="); Serial.print(p,4);
-  Serial.print(" I="); Serial.print(i,4); Serial.print(" D="); Serial.println(d,4);
+  Serial.print("PID "); Serial.print(controller); Serial.print(" "); Serial.print(p,4);
+  Serial.print(" "); Serial.print(i,4); Serial.print(" "); Serial.print(d,4); Serial.print(" "); Serial.println(maxI,4); 
 }
 
 void sendPID2(float min, float max)
@@ -123,14 +152,14 @@ void sendPID3(uint16_t min, uint16_t max)
   Serial.print("MTR MIN="); Serial.print(min); Serial.print(" MAX="); Serial.println(max);
 }
 
-uint16_t toPIDIndex(char v)
+void readFloatArray(float * outArray, int size)
 {
-  switch (v)
+  for (int i = 0; i < size; i++)
   {
-    case 'P': return 0;
-    case 'I': return 1;
-    case 'D': return 2;
-  }
+    char *arg = cmd.next();
+    if (arg == NULL) return;
+    outArray[i] = atof(arg);
+  } 
 }
 
 void setPID()
@@ -138,25 +167,33 @@ void setPID()
   char *arg = cmd.next();
   if (arg == NULL) return;
   char controller = *arg;
-  arg = cmd.next();
-  if (arg == NULL) return;
-  char coefficient = *arg;
-  arg = cmd.next();
-  if (arg == NULL) return;
-  float value = atof(arg);
   
-  uint16_t index = toPIDIndex(coefficient);
-  switch (controller)
+  float pidl[4];
+  readFloatArray(pidl, 4);
+  
+  for (int i=0; i<4; i++)
   {
-    case 'Y': 
-      storage.getData().controlSystemData.yawPID[index] = value;
-      return;
-    case 'R':
-      storage.getData().controlSystemData.rollPID[index] = value;
-      return;
-    case 'P':
-      storage.getData().controlSystemData.pitchPID[index] = value;
-      return;
+    switch (controller)
+    {
+      case 'A':
+        storage.getData().controlSystemData.outerRollPID[i] = pidl[i];
+        return;
+      case 'B':
+        storage.getData().controlSystemData.outerPitchPID[i] = pidl[i];
+        return;
+      case 'C': 
+        storage.getData().controlSystemData.outerYawPID[i] = pidl[i];
+        return;
+      case 'D':
+        storage.getData().controlSystemData.innerRollPID[i] = pidl[i];
+        return;
+      case 'E':
+        storage.getData().controlSystemData.innerPitchPID[i] = pidl[i];
+        return;
+      case 'F': 
+        storage.getData().controlSystemData.innerYawPID[i] = pidl[i];
+        return;
+    }
   }
 }
 
@@ -205,37 +242,33 @@ void unrecognized()
   Serial.println("What?"); 
 }
 
-void DebugVector(char* title, float* table, uint16_t count)
-{
-  Serial.print(title);
-  for (int i=0; i<count; i++)
-  {
-    Serial.print(" ");
-    Serial.print(table[i], 4);
-  }
-  Serial.print("\n");
-}
-
-void DebugVector(char* title, uint16_t* table, uint16_t count)
-{
-  Serial.print(title);
-  for (int i=0; i<count; i++)
-  {
-    Serial.print(" ");
-    Serial.print(table[i]);
-  }
-  Serial.print("\n");
-}
-
 void loop()
 {
+
+#ifdef ENABLE_TIMER_POWER_CUT
+	power_cut_timer.update();
+	if (power_cut_timer.elapsed() && armed == true)
+	{
+		disarm();
+	}
+#endif
+
+
   cmd.readSerial();
-  //stopwatch2.update();
   
   uint32_t now = Process::micros();
   float dt = (now - lastMicros) / 1000000.0;
   lastMicros = now;
   
+  /*
+  stopwatch.update();
+  if (stopwatch.elapsed())
+  {
+  float gyroYPR[3];
+  imu.getGyroYawPitchRollRates(gyroYPR);
+  Serial.println(gyroYPR[2]);
+  stopwatch.reset();
+  }*/
   
   if (armed == true)
   {
@@ -243,15 +276,5 @@ void loop()
     float angles[3];
     uint16_t motorData[4];
     multicopter.update(dt, pids, angles, motorData);
-    /*
-    if (stopwatch2.elapsed())
-    {
-      Serial.print("dt "); Serial.println(dt);
-      DebugVector("pids", pids, 3);
-      DebugVector("mtr data", motorData, 4);
-      DebugVector("angles", angles, 3);
-      stopwatch2.reset();
-    }
-    */
   }
 }

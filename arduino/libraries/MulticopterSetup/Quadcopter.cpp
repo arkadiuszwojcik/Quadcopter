@@ -7,20 +7,6 @@
 
 void Quadcopter::arm()
 {
-  /*
-  this->motors[FRONT_MOTOR].attach(this->pins[FRONT_MOTOR]);
-  this->motors[FRONT_MOTOR].write(0);
-
-  this->motors[REAR_MOTOR].attach(this->pins[REAR_MOTOR]);
-  this->motors[REAR_MOTOR].write(0);
-
-  this->motors[RIGHT_MOTOR].attach(this->pins[RIGHT_MOTOR]);
-  this->motors[RIGHT_MOTOR].write(0);
-
-  this->motors[LEFT_MOTOR].attach(this->pins[LEFT_MOTOR]);
-  this->motors[LEFT_MOTOR].write(0);
-  */
-
   this->motors[FRONT_MOTOR].write(0);
   this->motors[REAR_MOTOR].write(0);
   this->motors[RIGHT_MOTOR].write(0);
@@ -34,11 +20,6 @@ void Quadcopter::arm()
   Process::delay(1);
   this->motors[LEFT_MOTOR].attach(this->pins[LEFT_MOTOR]);
   Process::delay(1);
-
-  //this->motors[FRONT_MOTOR].write(100);
-  //this->motors[REAR_MOTOR].write(100);
-  //this->motors[RIGHT_MOTOR].write(100);
-  //this->motors[LEFT_MOTOR].write(100);
 
   Process::delay(400);
   this->motors[FRONT_MOTOR].write(0);
@@ -55,6 +36,8 @@ void Quadcopter::disarm()
   this->motors[RIGHT_MOTOR].write(0);
   this->motors[LEFT_MOTOR].write(0);
 
+  Process::delay(100);
+  
   this->motors[FRONT_MOTOR].detach();
   this->motors[REAR_MOTOR].detach();
   this->motors[RIGHT_MOTOR].detach();
@@ -73,10 +56,10 @@ void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uin
   motorsThrottle[FRONT_MOTOR] = newThrottle + rollPID + yawPID;
   motorsThrottle[REAR_MOTOR]  = newThrottle - rollPID + yawPID;
   #else // QUADCOPTER_X
-  motorsThrottle[RIGHT_MOTOR] = newThrottle + pitchPID - rollPID - yawPID;
-  motorsThrottle[LEFT_MOTOR]  = newThrottle - pitchPID + rollPID - yawPID;
-  motorsThrottle[FRONT_MOTOR] = newThrottle + pitchPID - rollPID + yawPID;
-  motorsThrottle[REAR_MOTOR]  = newThrottle - pitchPID + rollPID + yawPID;
+  motorsThrottle[LEFT_MOTOR] = newThrottle + pitchPID - rollPID - yawPID;
+  motorsThrottle[RIGHT_MOTOR]  = newThrottle - pitchPID + rollPID - yawPID;
+  motorsThrottle[REAR_MOTOR] = newThrottle + pitchPID - rollPID + yawPID;
+  motorsThrottle[FRONT_MOTOR]  = newThrottle - pitchPID + rollPID + yawPID;
   #endif
 
   int32_t highestThrottle = MathEx::arrayMax(motorsThrottle, MOTORS_COUNT);

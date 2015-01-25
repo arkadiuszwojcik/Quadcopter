@@ -30,15 +30,17 @@ class Multicopter
   void update(float dt, float* pids, float* angles, uint16_t* motorData)
   {
     float ypr[3];
+    float gyroYPR[3];
     float yawPID, rollPID, pitchPID;
     yawPID = rollPID = pitchPID = 0;
 
     this->imu.getYawPitchRoll(ypr);
+    this->imu.getGyroYawPitchRollRates(gyroYPR);
 	#ifdef QUADCOPTER_PLUS
     MathEx::rotateZ45(&ypr[2], &ypr[1], &ypr[0]);
 	#endif
 
-    this->controlSystem.update(dt, ypr[2], ypr[1], ypr[0], &yawPID, &rollPID, &pitchPID);
+    this->controlSystem.update(dt, ypr[2], ypr[1], ypr[0], gyroYPR[2], gyroYPR[1], gyroYPR[0], &yawPID, &rollPID, &pitchPID);
     this->multicopterSetup.setMotorThrottleRange(this->data.motorMinSignal, this->data.motorMaxSignal);
     this->multicopterSetup.update(this->throttle, rollPID, pitchPID, yawPID, motorData);
 

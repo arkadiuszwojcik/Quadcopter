@@ -21,6 +21,7 @@ FreeIMU::FreeIMU(IAccelerometer& acc, IGyroscope& gyro, IMagnetometer& magn)
 	twoKi = twoKiDef;
 	integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;
 	lastUpdate = now = 0;
+    gyroYawRate = 0; gyroPitchRate = 0; gyroRollRate = 0;
 }
 
 void FreeIMU::reset()
@@ -69,6 +70,13 @@ void FreeIMU::getYawPitchRollRad(float * ypr)
 	ypr[2] = atan(gy / sqrt(gx*gx + gz*gz));
 }
 
+void FreeIMU::getGyroYawPitchRollRates(float * ypr)
+{
+    ypr[0] = gyroYawRate;
+    ypr[1] = gyroPitchRate;
+    ypr[2] = gyroRollRate;
+}
+
 void FreeIMU::getQuaternion(float* q)
 {
 	float val[9];
@@ -91,6 +99,10 @@ void FreeIMU::getSensorsValues(float * values)
 	this->accelerometer.readAccelerationSI(values[0], values[1], values[2]);
 	this->gyroscope.readGyroscopeSI(values[3], values[4], values[5]);
 	this->magnetometer.readMagnetometerSI(values[6], values[7], values[8]);
+    
+    gyroRollRate = values[3];
+    gyroPitchRate = values[4];
+    gyroYawRate = values[5];
 }
 
 void FreeIMU::updateAHRS(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz)
