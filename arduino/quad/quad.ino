@@ -77,11 +77,15 @@ void setup()
   cmd.addCommand("ARM", arming);
   cmd.addCommand("DARM", disarm);
   cmd.addCommand("TH", throttle);
-  cmd.addCommand("SETPID", setPID);
-  cmd.addCommand("SETMTR", setMotor);
-  cmd.addCommand("PIDLIM", setPidLimit);
+  cmd.addCommand("SF", cmdSetFloat);
+  cmd.addCommand("SS", cmdSetShort);
+  cmd.addCommand("GF", cmdGetFloat);
+  cmd.addCommand("GS", cmdGetShort);
   cmd.addCommand("SAVE", save);
-  cmd.addCommand("GET", get);
+  //cmd.addCommand("SETPID", setPID);
+  //cmd.addCommand("SETMTR", setMotor);
+  //cmd.addCommand("PIDLIM", setPidLimit);
+  //cmd.addCommand("GET", get);
   cmd.addDefaultHandler(unrecognized);
 }
 
@@ -123,6 +127,83 @@ void save()
   Serial.println("Configuration saved");
 }
 
+void cmdGetFloat()
+{
+  uint16_t offset;
+  char *arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  serialSendFloat(atoi(arg));
+}
+
+void cmdGetShort()
+{
+  uint16_t offset;
+  char *arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  serialSendShort(atoi(arg));
+}
+
+void serialSendFloat(uint16_t offset)
+{
+  if (offset + sizeof(float) > sizeof(FPersistentData)) return;
+  float value = *((float*)(&((byte*)&storage.getData())[offset]));
+  Serial.print("FV "); Serial.print(offset); Serial.print(" "); Serial.println(value, 5);
+}
+
+void serialSendShort(uint16_t offset)
+{
+  if (offset + sizeof(int16_t) > sizeof(FPersistentData)) return;
+  int16_t value = *((int16_t*)(&((byte*)&storage.getData())[offset]));
+  Serial.print("SV "); Serial.print(offset); Serial.print(" "); Serial.println(value);
+}
+
+void cmdSetFloat()
+{
+  uint16_t offset;
+  char *arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  offset = atoi(arg);
+  arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  setFloat(offset, atof(arg));
+}
+
+void cmdSetShort()
+{
+  uint16_t offset;
+  char *arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  offset = atoi(arg);
+  arg = cmd.next();
+  
+  if (arg == NULL) return;
+  
+  setShort(offset, atoi(arg));
+}
+
+void setFloat(uint16_t offset, float value)
+{
+  if (offset + sizeof(float) > sizeof(FPersistentData)) return;
+  ((float*)(&((byte*)&storage.getData())[offset]))[0] = value; 
+}
+
+void setShort(uint16_t offset, int16_t value)
+{
+  if (offset + sizeof(int16_t) > sizeof(FPersistentData)) return;
+  ((int16_t*)(&((byte*)&storage.getData())[offset]))[0] = value; 
+}
+
+/*
 void get()
 {
   ControlSystemData& data = storage.getData().controlSystemData;
@@ -236,6 +317,7 @@ void setPidLimit()
     storage.getData().controlSystemData.maxPidValue = minMax;
   }
 }
+*/
 
 void unrecognized()
 {
