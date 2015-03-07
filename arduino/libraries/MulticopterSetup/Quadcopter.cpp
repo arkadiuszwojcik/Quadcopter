@@ -1,5 +1,6 @@
 #include <Math.h>
 #include <Servo.h>
+#include "../Storage/Storage.h"
 #include "../MathEx/MathEx.h"
 #include "../Process/Process.h"
 #include "MulticopterSetup.h"
@@ -44,11 +45,15 @@ void Quadcopter::disarm()
   this->motors[LEFT_MOTOR].detach();
 }
 
-void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, uint16_t* motors)
+void Quadcopter::update(float throttle, float fRollPID, float fPitchPID, float fYawPID)
 {
   uint16_t newThrottle = this->getThrottleInMicroSec(throttle);
 
   int32_t motorsThrottle[MOTORS_COUNT];
+  
+  uint16_t yawPID = map(fYawPID, 0.0, 1.0, this->data.minPidValue, this->data.maxPidValue);
+  uint16_t rollPID = map(fRollPID, 0.0, 1.0, this->data.minPidValue, this->data.maxPidValue);
+  uint16_t pitchPID = map(fPitchPID, 0.0, 1.0, this->data.minPidValue, this->data.maxPidValue);
   
   #ifdef QUADCOPTER_PLUS
   motorsThrottle[RIGHT_MOTOR] = newThrottle + pitchPID - yawPID;
@@ -63,32 +68,27 @@ void Quadcopter::update(float throttle, uint16_t rollPID, uint16_t pitchPID, uin
   #endif
 
   int32_t highestThrottle = MathEx::arrayMax(motorsThrottle, MOTORS_COUNT);
-  int32_t throttleOutpass = MathEx::maxEx(0, (int32_t)(highestThrottle - this->maxMotorMicroSec));
+  int32_t throttleOutpass = MathEx::maxEx(0, (int32_t)(highestThrottle - this->data.motorMaxSignal));
 
   motorsThrottle[FRONT_MOTOR] -= throttleOutpass;
   motorsThrottle[REAR_MOTOR]  -= throttleOutpass;
   motorsThrottle[RIGHT_MOTOR] -= throttleOutpass;
   motorsThrottle[LEFT_MOTOR]  -= throttleOutpass;
 
-  if (motorsThrottle[FRONT_MOTOR] < this->minMotorMicroSec) motorsThrottle[FRONT_MOTOR] = this->minMotorMicroSec;
-  if (motorsThrottle[REAR_MOTOR] < this->minMotorMicroSec) motorsThrottle[REAR_MOTOR] = this->minMotorMicroSec;
-  if (motorsThrottle[RIGHT_MOTOR] < this->minMotorMicroSec) motorsThrottle[RIGHT_MOTOR] = this->minMotorMicroSec;
-  if (motorsThrottle[LEFT_MOTOR] < this->minMotorMicroSec) motorsThrottle[LEFT_MOTOR] = this->minMotorMicroSec;
+  if (motorsThrottle[FRONT_MOTOR] < this->data.motorMinSignal) motorsThrottle[FRONT_MOTOR] = this->data.motorMinSignal;
+  if (motorsThrottle[REAR_MOTOR] < this->data.motorMinSignal) motorsThrottle[REAR_MOTOR] = this->data.motorMinSignal;
+  if (motorsThrottle[RIGHT_MOTOR] < this->data.motorMinSignal) motorsThrottle[RIGHT_MOTOR] = this->data.motorMinSignal;
+  if (motorsThrottle[LEFT_MOTOR] < this->data.motorMinSignal) motorsThrottle[LEFT_MOTOR] = this->data.motorMinSignal;
 
   this->motors[FRONT_MOTOR].writeMicroseconds(motorsThrottle[FRONT_MOTOR]);
   this->motors[REAR_MOTOR].writeMicroseconds(motorsThrottle[REAR_MOTOR]);
   this->motors[RIGHT_MOTOR].writeMicroseconds(motorsThrottle[RIGHT_MOTOR]);
   this->motors[LEFT_MOTOR].writeMicroseconds(motorsThrottle[LEFT_MOTOR]);
-
-  motors[0] = motorsThrottle[FRONT_MOTOR];
-  motors[1] = motorsThrottle[REAR_MOTOR];
-  motors[2] = motorsThrottle[RIGHT_MOTOR];
-  motors[3] = motorsThrottle[LEFT_MOTOR];
 }
 
 
 uint16_t Quadcopter::getThrottleInMicroSec(float throttle)
 {
   throttle = MathEx::truncate(throttle, 0.0, 1.0);
-  return throttle * (float)(this->maxMotorMicroSec - this->minMotorMicroSec) + this->minMotorMicroSec;
+  return throttle * (float)(this->data.motorMaxSignal - this->data.motorMinSignal) + this->data.motorMinSignal;
 }

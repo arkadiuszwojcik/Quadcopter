@@ -10,7 +10,8 @@
 class Quadcopter : public MulticopterSetup
 {
  public:
-  Quadcopter(uint8_t frontMotorPin, uint8_t rearMotorPin, uint8_t rightMotorPin, uint8_t leftMotorPin)
+  Quadcopter(Storage& storage, uint8_t frontMotorPin, uint8_t rearMotorPin, uint8_t rightMotorPin, uint8_t leftMotorPin)
+  : data(storage.getData())
   {
     this->pins[FRONT_MOTOR] = frontMotorPin;
     this->pins[REAR_MOTOR]  = rearMotorPin;
@@ -20,13 +21,7 @@ class Quadcopter : public MulticopterSetup
 
   void arm();
   void disarm();
-  void update(float throttle, uint16_t rollPID, uint16_t pitchPID, uint16_t yawPID, uint16_t* motors);
-
-  void setMotorThrottleRange(uint16_t minMicroSec, uint16_t maxMicroSec)
-  {
-    this->minMotorMicroSec = minMicroSec;
-    this->maxMotorMicroSec = maxMicroSec;
-  }
+  void update(float throttle, float rollPID, float pitchPID, float yawPID);
 
  private:
   uint16_t getThrottleInMicroSec(float throttle);
@@ -34,8 +29,7 @@ class Quadcopter : public MulticopterSetup
  private:
   Servo motors[MOTORS_COUNT];
   uint8_t pins[MOTORS_COUNT];
-  uint16_t minMotorMicroSec;
-  uint16_t maxMotorMicroSec;
+  FPersistentData& data;
 };
 
 

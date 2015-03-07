@@ -18,15 +18,15 @@ void ControlSystem::update(
   this->yawController.setRateTunings(this->data.innerYawPID[0], this->data.innerYawPID[1], this->data.innerYawPID[2], this->data.innerYawPID[3]);
   this->rollController.setRateTunings(this->data.innerRollPID[0], this->data.innerRollPID[1], this->data.innerRollPID[2], this->data.innerRollPID[3]);
   this->pitchController.setRateTunings(this->data.innerPitchPID[0], this->data.innerPitchPID[1], this->data.innerPitchPID[2], this->data.innerPitchPID[3]);
-#elif
+#else
   this->yawController.setTunings(this->data.outerYawPID[0], this->data.outerYawPID[1], this->data.outerYawPID[2], this->data.outerYawPID[3]);
   this->rollController.setTunings(this->data.outerRollPID[0], this->data.outerRollPID[1], this->data.outerRollPID[2], this->data.outerRollPID[3]);
   this->pitchController.setTunings(this->data.outerPitchPID[0], this->data.outerPitchPID[1], this->data.outerPitchPID[2], this->data.outerPitchPID[3]);
 #endif
 
-  this->yawController.setOutputLimits(this->data.minPidValue, this->data.maxPidValue);
-  this->rollController.setOutputLimits(this->data.minPidValue, this->data.maxPidValue);
-  this->pitchController.setOutputLimits(this->data.minPidValue, this->data.maxPidValue);
+  this->yawController.setOutputLimits(0.0, 1.0);
+  this->rollController.setOutputLimits(0.0, 1.0);
+  this->pitchController.setOutputLimits(0.0, 1.0);
 
   this->yawAngle = yaw;
   this->pitchAngle = pitch;

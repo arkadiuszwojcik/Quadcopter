@@ -41,8 +41,7 @@ class Multicopter
 	#endif
 
     this->controlSystem.update(dt, ypr[2], ypr[1], ypr[0], gyroYPR[2], gyroYPR[1], gyroYPR[0], &yawPID, &rollPID, &pitchPID);
-    this->multicopterSetup.setMotorThrottleRange(this->data.motorMinSignal, this->data.motorMaxSignal);
-    this->multicopterSetup.update(this->throttle, rollPID, pitchPID, yawPID, motorData);
+    this->multicopterSetup.update(this->throttle, rollPID, pitchPID, yawPID);
 
     pids[0] = yawPID;
     pids[1] = rollPID;

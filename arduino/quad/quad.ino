@@ -26,7 +26,7 @@
 #define BMA180_ACCELEROMETER
 #define ITG3200_GYROSCOPE
 #define HMC5883L_MAGNETOMETER
-#define ENABLE_TIMER_POWER_CUT
+//#define ENABLE_TIMER_POWER_CUT
 #define TIMER_POWER_CUT_INTERVAL 60000
 
 I2C i2c;
@@ -49,13 +49,13 @@ FreeIMU imu(accelerometer, gyroscope, magnetometer);
 Stopwatch power_cut_timer(TIMER_POWER_CUT_INTERVAL);
 #endif
 
-#ifdef QUADCOPTER_SETUP
-Quadcopter frameSetup(4,5,7,9);
-#endif
-
 SerialCommand cmd;
 
 Storage storage;
+
+#ifdef QUADCOPTER_SETUP
+Quadcopter frameSetup(storage,4,5,7,9);
+#endif
 
 Multicopter multicopter(frameSetup, storage, imu);
 

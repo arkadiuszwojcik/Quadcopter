@@ -8,7 +8,7 @@ class AxisCascadeControl
     : stabilisePID(actualAngle, &this->desiredGyroRate, desiredAngle, 0, 0, 0, 0),
       ratePID(actualGyroRate, outPid, &this->desiredGyroRate,0 ,0, 0, 0)
       {
-        this->stabilisePID.setOutputLimits(-8.0, 8.0);
+        this->stabilisePID.setOutputLimits(0.0, 1.0);
       }
 
   inline void update(float dt)

@@ -14,8 +14,6 @@ struct ControlSystemData
   float innerPitchPID[4];
   float outerYawPID[4];
   float innerYawPID[4];
-  float minPidValue;
-  float maxPidValue;
 };
 
 struct FPersistentData
@@ -25,6 +23,8 @@ struct FPersistentData
   float magnetometerOffsets[3];
   float magnetometerDeclination;
   ControlSystemData controlSystemData;
+  float minPidValue;
+  float maxPidValue;
   uint16_t motorMinSignal;
   uint16_t motorMaxSignal;
 };

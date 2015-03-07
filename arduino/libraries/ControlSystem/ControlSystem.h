@@ -1,7 +1,7 @@
 #ifndef ControlSystem_h
 #define ControlSystem_h
 
-#define CASCADE_CONTROL
+//#define CASCADE_CONTROL
 
 class ControlSystem
 {
@@ -13,7 +13,7 @@ class ControlSystem
    yawController(&yawAngle, &gyroYawRate, &desiredYawAngle, &outYawPid),
    rollController(&rollAngle, &gyroRollRate, &desiredRollAngle, &outRollPid),
    pitchController(&pitchAngle, &gyroPitchRate, &desiredPitchAngle, &outPitchPid)
-#elif
+#else
    yawController(&yawAngle, &outYawPid, &desiredYawAngle, 0, 0, 0, 0),
    rollController(&rollAngle, &outRollPid, &desiredRollAngle, 0, 0, 0, 0),
    pitchController(&pitchAngle, &outPitchPid, &desiredPitchAngle, 0, 0, 0, 0)
@@ -49,7 +49,7 @@ class ControlSystem
   AxisCascadeControl yawController;
   AxisCascadeControl rollController;
   AxisCascadeControl pitchController;
-#elif
+#else
   PID yawController;
   PID pitchController;
   PID rollController;
